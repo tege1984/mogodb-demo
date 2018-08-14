@@ -26,6 +26,7 @@ async function createCourses() {
 }
 
 async function getCourses() {
+  // comparision operators
   // eq (equal)
   // ne (not equal)
   // gt (greater than)
@@ -35,7 +36,15 @@ async function getCourses() {
   // in
   // nin (not in)
 
-  const courses = await Course.find({ author: "mosh", isPublished: true })
+  // logical operators
+  // or
+  // and
+
+  const courses = await Course
+    //.find({ author: "mosh", isPublished: true })
+    .find()
+    .or([{ author: "mosh" }, { isPublished: true }])
+    .and([{ author: "mosh" }, { isPublished: false }])
     .limit(2)
     .sort({ name: 1 })
     .select({ name: 1, tags: 1 });
