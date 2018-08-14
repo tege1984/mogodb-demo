@@ -42,9 +42,17 @@ async function getCourses() {
 
   const courses = await Course
     //.find({ author: "mosh", isPublished: true })
-    .find()
-    .or([{ author: "mosh" }, { isPublished: true }])
-    .and([{ author: "mosh" }, { isPublished: false }])
+
+    // starts with
+    .find({ author: /^mosh/ })
+
+    // ends with
+    // for not case sensitive add i
+    .find({ author: /hamedani$/i })
+
+    // Contains mosh
+    .find({ author: /.*mosh.* / })
+
     .limit(2)
     .sort({ name: 1 })
     .select({ name: 1, tags: 1 });
@@ -55,3 +63,6 @@ getCourses();
 
 //.find({ price: { $gt: 10, $lte: 20 } })
 //.find({ price: { $in: [10, 15, 20] } })
+// .find()
+// .or([{ author: "mosh" }, { isPublished: true }])
+// .and([{ author: "mosh" }, { isPublished: false }])
