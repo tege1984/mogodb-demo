@@ -26,43 +26,86 @@ async function createCourses() {
 }
 
 async function getCourses() {
-  // comparision operators
-  // eq (equal)
-  // ne (not equal)
-  // gt (greater than)
-  // gte (greater than or equal to)
-  // lt (less than)
-  // lte (less than or equla to)
-  // in
-  // nin (not in)
-
-  // logical operators
-  // or
-  // and
-
-  const courses = await Course
-    //.find({ author: "mosh", isPublished: true })
-
-    // starts with
-    .find({ author: /^mosh/ })
-
-    // ends with
-    // for not case sensitive add i
-    .find({ author: /hamedani$/i })
-
-    // Contains mosh
-    .find({ author: /.*mosh.* / })
-
-    .limit(2)
+  const pageNumber = 2;
+  const pageSize = 10;
+  //  /api/courses/pageNumber=2&pageSize=10
+  const courses = await Course.find({ author: "mosh", isPublished: true })
+    .skip((pageNumber - 1) * pageSize)
+    .limit(pageSize)
     .sort({ name: 1 })
-    .select({ name: 1, tags: 1 });
+    .select({ name: 1, tags: 1 })
+    .count();
   console.log(courses);
 }
 
-getCourses();
+async function updateCourse(id) {
+  const course = await Course.findById(id);
+  if (!course) return;
+  course.isPublished = true;
+  course.author = "another name";
+
+  const result = await course.save();
+  console.log(result);
+}
+
+async function updateCourse1(id) {
+  // const result = await Course.update(
+  //   { _id: id },
+  //   { $set: { author: "michael", isPublished: true } }
+  // );
+
+  const course = await Course.findByIdAndUpdate(
+    id,
+    {
+      $set: { author: "mosh", isPublished: false }
+    },
+    { new: true }
+  );
+
+  console.log(course);
+}
+
+//getCourses();
+
+updateCourse1("5b729a1ca2ce241c70a33d3b");
 
 //.find({ price: { $gt: 10, $lte: 20 } })
 //.find({ price: { $in: [10, 15, 20] } })
 // .find()
 // .or([{ author: "mosh" }, { isPublished: true }])
 // .and([{ author: "mosh" }, { isPublished: false }])
+// starts with
+// .find({ author: /^mosh/ })
+// // ends with
+// // for not case sensitive add i
+// .find({ author: /hamedani$/i })
+// // Contains mosh
+// .find({ author: /.*mosh.*/i })
+// comparision operators
+// eq (equal)
+// ne (not equal)
+// gt (greater than)
+// gte (greater than or equal to)
+// lt (less than)
+// lte (less than or equla to)
+// in
+// nin (not in)
+
+// logical operators
+// or
+// and
+
+// approach: query first
+// findById()
+// modify its properties
+// save()
+
+// approach: update first
+// update directly
+// optionally: get the update documents
+
+// another approach to update a document
+// course.set({
+//   isPublished: true,
+//   author: "another name"
+// });
