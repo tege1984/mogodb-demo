@@ -65,9 +65,16 @@ async function updateCourse1(id) {
   console.log(course);
 }
 
+async function deleteCourse(id) {
+  const result = await Course.deleteOne({ _id: id });
+  const course = await Course.findOneAndRemove(id);
+  console.log(course);
+}
+
 //getCourses();
 
-updateCourse1("5b729a1ca2ce241c70a33d3b");
+//updateCourse1("5b729a1ca2ce241c70a33d3b");
+deleteCourse("5b729a1ca2ce241c70a33d3b");
 
 //.find({ price: { $gt: 10, $lte: 20 } })
 //.find({ price: { $in: [10, 15, 20] } })
