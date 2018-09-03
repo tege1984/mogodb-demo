@@ -5,7 +5,7 @@ mongoose
   .catch(error => console.error("Could not connect mongodb", error));
 
 const courseSchema = new mongoose.Schema({
-  name: String,
+  name: { type: String, required: true },
   author: String,
   tags: [String],
   date: { type: Date, default: Date.now },
@@ -15,14 +15,19 @@ const Course = mongoose.model("Course", courseSchema);
 
 async function createCourses() {
   const course = new Course({
-    name: "Angular course",
+    //name: "Angular course",
     author: "mosh",
     tags: ["Angular", "frontend"],
     isPublished: true
   });
 
-  const result = await course.save();
-  console.log(result);
+  try {
+    await course.validate();
+    // const result = await course.save();
+    // console.log(result);
+  } catch (error) {
+    console.log(error.message);
+  }
 }
 
 async function getCourses() {
@@ -49,11 +54,6 @@ async function updateCourse(id) {
 }
 
 async function updateCourse1(id) {
-  // const result = await Course.update(
-  //   { _id: id },
-  //   { $set: { author: "michael", isPublished: true } }
-  // );
-
   const course = await Course.findByIdAndUpdate(
     id,
     {
@@ -71,11 +71,10 @@ async function deleteCourse(id) {
   console.log(course);
 }
 
+createCourses();
 //getCourses();
-
 //updateCourse1("5b729a1ca2ce241c70a33d3b");
-deleteCourse("5b729a1ca2ce241c70a33d3b");
-
+//deleteCourse("5b729a1ca2ce241c70a33d3b");
 //.find({ price: { $gt: 10, $lte: 20 } })
 //.find({ price: { $in: [10, 15, 20] } })
 // .find()
@@ -97,22 +96,22 @@ deleteCourse("5b729a1ca2ce241c70a33d3b");
 // lte (less than or equla to)
 // in
 // nin (not in)
-
 // logical operators
 // or
 // and
-
 // approach: query first
 // findById()
 // modify its properties
 // save()
-
 // approach: update first
 // update directly
 // optionally: get the update documents
-
 // another approach to update a document
 // course.set({
 //   isPublished: true,
 //   author: "another name"
 // });
+// const result = await Course.update(
+//   { _id: id },
+//   { $set: { author: "michael", isPublished: true } }
+// );
