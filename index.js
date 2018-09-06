@@ -22,7 +22,7 @@ async function createCourses() {
   });
 
   try {
-    await course.validate();
+    //await course.validate();
     // const result = await course.save();
     // console.log(result);
   } catch (error) {
