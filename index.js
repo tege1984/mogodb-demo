@@ -21,12 +21,24 @@ const courseSchema = new mongoose.Schema({
   //custom validator
   tags: {
     type: Array,
+    // async validaor
     validate: {
-      validator: function(v) {
-        return v && v.length > 0;
+      isAsync: true,
+      validator: function(v, callback) {
+        setTimeout(() => {
+          //Do some Async work
+          const result = v && v.length > 0;
+          callback(result);
+        }, 4000);
       },
       message: "A course should have at least one tag"
     }
+    // validate: {
+    //   validator: function(v) {
+    //     return v && v.length > 0;
+    //   },
+    //   message: "A course should have at least one tag"
+    // }
   },
   date: { type: Date, default: Date.now },
   isPublished: Boolean,
@@ -47,7 +59,7 @@ async function createCourses() {
     name: "Angular course",
     category: "web",
     author: "mosh",
-    tags: ["reactjs"],
+    tags: [],
     isPublished: true,
     price: 15
   });
